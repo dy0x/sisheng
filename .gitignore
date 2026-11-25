@@ -1,6 +1,7 @@
 # Personal
 build
 .DS_Store
+audio-cmn/
 
 # Prerequisites
 *.d
