@@ -5,5 +5,7 @@ typedef struct {
   int num_tones;
 } Pinyin;
 
-extern Pinyin active_tones[];
-extern const size_t active_tones_count;
+Pinyin get_word();
+int format_pinyin(Pinyin word, int tone, char *output, size_t output_size);
+
+extern char hao_list[4][5];
