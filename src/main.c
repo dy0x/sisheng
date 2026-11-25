@@ -1,6 +1,5 @@
 #include "main.h"
 #include "pinyin.h"
-#include "vendor/miniaudio/miniaudio.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,22 +41,30 @@ int menu_response(int max) {
   }
 }
 
-int play(Pinyin *active_tones) {
-  ma_engine engine;
-  if (ma_engine_init(NULL, &engine) != MA_SUCCESS) {
-    printf("Failed to initialize audio engine.\n");
-    return -1;
+int play_audio(Pinyin *active_tones) {
+#if defined(__APPLE__)
+  if (system("afplay audio/hao3.mp3") != 0) {
+    fprintf(stderr, "Could not play audio. Check that afplay is available.\n");
+    return 1;
   }
+#elif defined(__linux__)
+  if (system("pw-play audio/hao3.mp3") != 0) {
+    fprintf(stderr, "Could not play audio. Check that pw-play is available.\n");
+    return 1;
+  }
+#else
+  fprintf(stderr, "Audio playback is not supported on this OS.\n");
+  return 1;
+#endif
 
-  ma_engine_play_sound(&engine, "hao3.mp3", NULL);
-
-  printf("Press Enter to quit...\n");
-  getchar();
-  ma_engine_uninit(&engine);
   return 0;
 }
 
-void start_single_tones() { play(active_tones); }
+void start_single_tones() {
+  for (size_t i = 0; i < active_tones_count; i++) {
+    play_audio(&active_tones[i]);
+  }
+}
 
 int main() {
   printf("Welcome to dy0x's Tone Trainer!\n");
