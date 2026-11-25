@@ -1,13 +1,27 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -g
+CFLAGS = -O -Wall -Wextra -g
+TARGET = build/sisheng
 
-build: main.c pinyin.c pinyin.h main.h
-	$(CC) $(CFLAGS) main.c pinyin.c -o build
+SRCS = $(wildcard src/*.c)
+OBJS = $(SRCS:src/%.c=build/%.o)
+DEPS = $(OBJS:.o=.d)
 
-run: build
-	./build
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LDLIBS)
+
+build/%.o: src/%.c
+	@mkdir -p build
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
+
+run: $(TARGET)
+	./$(TARGET)
 
 clean:
-	rm -f build
+	rm -f $(OBJS) $(DEPS) $(TARGET)
+	@rmdir build 2>/dev/null || true
 
-.PHONY: run clean
+-include $(DEPS)
+
+.PHONY: all run clean
