@@ -7,12 +7,12 @@
 
 #define MAX_WINS 5
 
-int menu_response(int max) {
+int menu_response(int min, int max) {
   char buffer[64];
   char *end;
 
   for (;;) {
-    printf("Selection (1-%d): ", max);
+    printf("Selection (%d-%d): ", min, max);
 
     if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
       fprintf(stderr, "Invalid input or EOF\n");
@@ -36,7 +36,7 @@ int menu_response(int max) {
       end++;
     }
 
-    if ((*end == '\n' || *end == '\0') && input >= 1 && input <= max) {
+    if ((*end == '\n' || *end == '\0') && input >= min && input <= max) {
       return (int)input;
     }
 
@@ -86,11 +86,11 @@ void start_active_tones(int max_wins) {
     printf("\033[2J\033[H");
     printf("\nSingle Tone Mode\n");
     printf("\nListen to the audio and select the corresponding pinyin:\n");
-    printf("Current Score: (%d/%d)\n", wins,max_wins);
+    printf("Current Score: (%d/%d)\n", wins, max_wins);
     Pinyin word = get_word();
     render_tui(word);
     play_audio(word);
-    response = menu_response(4);
+    response = menu_response(1, 4);
     if (response == word.tone[0]) {
       wins += 1;
       printf("Correct!\n");
@@ -106,11 +106,15 @@ int main() {
   printf("Select which mode you would like:\n");
   printf("  1 - Single Tones\n");
   printf("  2 - Tone Pairs (Unavailable)\n");
+  printf("  0 - Quit\n");
 
   srand(time(NULL));
-  int game_mode = menu_response(2);
+  int game_mode = menu_response(0, 2);
 
   switch (game_mode) {
+  case 0:
+    printf("Goodbye!\n");
+    return 0;
   case 1:
     start_active_tones(MAX_WINS);
     break;
