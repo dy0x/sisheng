@@ -108,7 +108,7 @@ static void start_active_tones(int max_wins) {
   }
 }
 
-int main() {
+int main(void) {
   const int min = 0, max = 2;
   // clear_screen();
   printf("Welcome to dy0x's Tone Trainer!\n");

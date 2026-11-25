@@ -4,22 +4,24 @@
 #include <stdlib.h>
 #include <string.h>
 
-const Pinyin single_word[] = {{.name = "hao3", .tone = {3}, .num_tones = 1},
-                        {.name = "niu1", .tone = {1}, .num_tones = 1},
-                        {.name = "niu2", .tone = {2}, .num_tones = 1},
-                        {.name = "niu3", .tone = {3}, .num_tones = 1},
-                        {.name = "niu4", .tone = {4}, .num_tones = 1}};
+static const Pinyin single_word[] = {
+    {.name = "hao3", .tone = {3}, .num_tones = 1},
+    {.name = "niu1", .tone = {1}, .num_tones = 1},
+    {.name = "niu2", .tone = {2}, .num_tones = 1},
+    {.name = "niu3", .tone = {3}, .num_tones = 1},
+    {.name = "niu4", .tone = {4}, .num_tones = 1}};
 
-static const char *a[] = {"ā", "á", "ǎ", "à"};
-static const char *e[] = {"ē", "é", "ě", "è"};
-static const char *i[] = {"ī", "í", "ǐ", "ì"};
-static const char *o[] = {"ō", "ó", "ǒ", "ò"};
-static const char *u[] = {"ū", "ú", "ǔ", "ù"};
-static const char *v[] = {"ǖ", "ǘ", "ǚ", "ǜ"};
+static const char *vowel_a[] = {"ā", "á", "ǎ", "à"};
+static const char *vowel_e[] = {"ē", "é", "ě", "è"};
+static const char *vowel_i[] = {"ī", "í", "ǐ", "ì"};
+static const char *vowel_o[] = {"ō", "ó", "ǒ", "ò"};
+static const char *vowel_u[] = {"ū", "ú", "ǔ", "ù"};
+static const char *vowel_v[] = {"ǖ", "ǘ", "ǚ", "ǜ"};
 
-const size_t single_word_count = sizeof(single_word) / sizeof(single_word[0]);
+static const size_t single_word_count =
+    sizeof(single_word) / sizeof(single_word[0]);
 
-Pinyin get_word() { return single_word[rand() % single_word_count]; }
+Pinyin get_word(void) { return single_word[rand() % single_word_count]; }
 
 static int vowel_position(Pinyin word) {
   const char *name = word.name;
@@ -67,19 +69,19 @@ int format_pinyin(Pinyin word, int tone, char *output, size_t output_size) {
 
   switch (word.name[position]) {
   case 'a':
-    replacement = a[tone];
+    replacement = vowel_a[tone];
     break;
   case 'e':
-    replacement = e[tone];
+    replacement = vowel_e[tone];
     break;
   case 'i':
-    replacement = i[tone];
+    replacement = vowel_i[tone];
     break;
   case 'o':
-    replacement = o[tone];
+    replacement = vowel_o[tone];
     break;
   case 'u':
-    replacement = u[tone];
+    replacement = vowel_u[tone];
     break;
   default:
     return 1;

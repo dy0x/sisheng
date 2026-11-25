@@ -1,6 +1,6 @@
 CC = cc
 SANITIZE = -fsanitize=address,undefined
-CFLAGS = -std=c2x -pedantic -O0 -g -Wall -Wextra -Wshadow -Wconversion $(SANITIZE)
+CFLAGS = -std=c23 -pedantic -O0 -g -Wall -Wextra -Wshadow -Wconversion $(SANITIZE)
 LDFLAGS = $(SANITIZE)
 TARGET = build/sisheng
 
