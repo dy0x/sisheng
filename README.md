@@ -6,10 +6,12 @@ Sisheng (四声) literally means "Four Tones" in Mandarin Chinese.
 It is currently a work in progress. This project is being worked on without AI assistance, for the sake of learning.
 
 ## Development
-To build and run:
+Build and run:
+
 ```sh
-gcc main.c -o build && ./build
+make run
 ```
+To build without running, use `make`. To remove the compiled program, use `make clean`.
 
 ## Credits
 Audio sourced from [audio-cnm](https://github.com/hugolpz/audio-cmn)
