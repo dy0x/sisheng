@@ -10,3 +10,6 @@ To build and run:
 ```sh
 gcc main.c -o build && ./build
 ```
+
+## Credits
+Audio sourced from [audio-cnm](https://github.com/hugolpz/audio-cmn)
