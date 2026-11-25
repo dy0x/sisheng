@@ -1,3 +1,6 @@
+#ifndef PINYIN_H
+#define PINYIN_H
+
 #include <stddef.h>
 typedef struct {
   const char *name;
@@ -8,4 +11,4 @@ typedef struct {
 Pinyin get_word();
 int format_pinyin(Pinyin word, int tone, char *output, size_t output_size);
 
-extern char hao_list[4][5];
+#endif

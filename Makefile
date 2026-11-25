@@ -1,5 +1,7 @@
-CC = gcc
-CFLAGS = -O -Wall -Wextra -g
+CC = cc
+SANITIZE = -fsanitize=address,undefined
+CFLAGS = -std=c2x -pedantic -O0 -g -Wall -Wextra -Wshadow -Wconversion $(SANITIZE)
+LDFLAGS = $(SANITIZE)
 TARGET = build/sisheng
 
 SRCS = $(wildcard src/*.c)

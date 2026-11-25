@@ -7,7 +7,9 @@
 
 #define MAX_WINS 5
 
-int menu_response(int min, int max) {
+static void clear_screen(void) { printf("\033[2J\033[H"); }
+
+static int menu_response(int min, int max) {
   char buffer[64];
   char *end;
 
@@ -44,7 +46,7 @@ int menu_response(int min, int max) {
   }
 }
 
-int play_audio(Pinyin active_tones) {
+static int play_audio(Pinyin active_tones) {
   const char *filename = active_tones.name;
   char command[256];
 
@@ -68,29 +70,35 @@ int play_audio(Pinyin active_tones) {
   return 0;
 }
 
-void render_tui(Pinyin word) {
+static void render_tui(Pinyin word) {
   char pinyin[64];
   for (size_t i = 0; i < 4; i++) {
     if (format_pinyin(word, i, pinyin, sizeof(pinyin)) != 0) {
       fprintf(stderr, "Could not format pinyin.\n");
       return;
-    };
+    }
     printf("  %zu - %s\n", i + 1, pinyin);
   }
 }
 
-void start_active_tones(int max_wins) {
+static void start_active_tones(int max_wins) {
+  const int min = 1, max = 4;
   int wins = 0;
   int response;
-  while (wins <= max_wins) {
-    printf("\033[2J\033[H");
+
+  clear_screen();
+
+  while (wins < max_wins) {
     printf("\nSingle Tone Mode\n");
     printf("\nListen to the audio and select the corresponding pinyin:\n");
     printf("Current Score: (%d/%d)\n", wins, max_wins);
     Pinyin word = get_word();
     render_tui(word);
-    play_audio(word);
-    response = menu_response(1, 4);
+    if (play_audio(word) == 1) {
+      exit(1);
+    };
+    response = menu_response(min, max);
+    clear_screen();
     if (response == word.tone[0]) {
       wins += 1;
       printf("Correct!\n");
@@ -101,7 +109,8 @@ void start_active_tones(int max_wins) {
 }
 
 int main() {
-  printf("\033[2J\033[H");
+  const int min = 0, max = 2;
+  // clear_screen();
   printf("Welcome to dy0x's Tone Trainer!\n");
   printf("Select which mode you would like:\n");
   printf("  1 - Single Tones\n");
@@ -109,7 +118,7 @@ int main() {
   printf("  0 - Quit\n");
 
   srand(time(NULL));
-  int game_mode = menu_response(0, 2);
+  int game_mode = menu_response(min, max);
 
   switch (game_mode) {
   case 0:

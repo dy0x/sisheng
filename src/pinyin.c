@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-Pinyin single_word[] = {{.name = "hao3", .tone = {3}, .num_tones = 1},
+const Pinyin single_word[] = {{.name = "hao3", .tone = {3}, .num_tones = 1},
                         {.name = "niu1", .tone = {1}, .num_tones = 1},
                         {.name = "niu2", .tone = {2}, .num_tones = 1},
                         {.name = "niu3", .tone = {3}, .num_tones = 1},
@@ -17,15 +17,11 @@ static const char *o[] = {"ō", "ó", "ǒ", "ò"};
 static const char *u[] = {"ū", "ú", "ǔ", "ù"};
 static const char *v[] = {"ǖ", "ǘ", "ǚ", "ǜ"};
 
-// temporary arrays until i implement vowel generation
-char hao_list[4][5] = {"hāo", "háo", "hǎo", "hào"};
-char niu_list[4][5] = {"niū", "niú", "niǔ", "niù"};
-
 const size_t single_word_count = sizeof(single_word) / sizeof(single_word[0]);
 
 Pinyin get_word() { return single_word[rand() % single_word_count]; }
 
-int vowel_position(Pinyin word) {
+static int vowel_position(Pinyin word) {
   const char *name = word.name;
   char target = 'a';
   char *result = strchr(name, target);
