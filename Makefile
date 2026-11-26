@@ -8,6 +8,10 @@ SRCS = $(wildcard src/*.c)
 OBJS = $(SRCS:src/%.c=build/%.o)
 DEPS = $(OBJS:.o=.d)
 
+TEST_SRCS = $(wildcard tests/test_*.c)
+TEST_BINS = $(patsubst tests/%.c,build/%,$(TEST_SRCS))
+LIB_OBJS = $(filter-out build/main.o,$(OBJS))
+
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
@@ -21,9 +25,15 @@ run: $(TARGET)
 	./$(TARGET)
 
 clean:
-	rm -f $(OBJS) $(DEPS) $(TARGET)
+	rm -f $(OBJS) $(DEPS) $(TARGET) $(TEST_BINS)
 	@rmdir build 2>/dev/null || true
+
+test: $(TEST_BINS)
+	for t in $(TEST_BINS); do ./$$t || exit 1; done
+
+build/test_%: tests/test_%.c $(LIB_OBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 -include $(DEPS)
 
-.PHONY: all run clean
+.PHONY: all run clean test
