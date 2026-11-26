@@ -5,18 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static const Pinyin single_syllables[] = {
-    {.name = "hao3", .tone = {3}, .num_tones = 1},
-    {.name = "niu1", .tone = {1}, .num_tones = 1},
-    {.name = "niu2", .tone = {2}, .num_tones = 1},
-    {.name = "niu4", .tone = {4}, .num_tones = 1},
-    {.name = "nong1", .tone = {1}, .num_tones = 1},
-    {.name = "nong2", .tone = {2}, .num_tones = 1},
-    {.name = "nong3", .tone = {3}, .num_tones = 1},
-    {.name = "ai1", .tone = {1}, .num_tones = 1},
-    {.name = "ai2", .tone = {2}, .num_tones = 1},
-    {.name = "ai4", .tone = {4}, .num_tones = 1},
-};
+static const char *bases[]={"hao","niu","nong","ai","xiang","xiao","xie","zhang","ma","ne"};
 
 static const char* vowel_a[] = {"ā", "á", "ǎ", "à", "a"};
 static const char* vowel_e[] = {"ē", "é", "ě", "è", "e"};
@@ -25,11 +14,12 @@ static const char* vowel_o[] = {"ō", "ó", "ǒ", "ò", "o"};
 static const char* vowel_u[] = {"ū", "ú", "ǔ", "ù", "u"};
 static const char* vowel_v[] = {"ǖ", "ǘ", "ǚ", "ǜ", "ü"};
 
-static const size_t single_syllables_count =
-    sizeof(single_syllables) / sizeof(single_syllables[0]);
-
 Pinyin random_syllable(void) {
-  return single_syllables[(size_t)rand() % single_syllables_count];
+    Pinyin p;
+    const char *base = bases[rand()%(int)(sizeof(bases)/sizeof(bases[0]))];
+    p.tone = rand() % 5 + 1;
+    snprintf(p.name,sizeof(p.name),"%s%d",base,p.tone);
+    return p;
 }
 
 int audio_file_exists(Pinyin syllable){

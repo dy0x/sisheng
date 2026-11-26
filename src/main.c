@@ -50,7 +50,7 @@ static void run_single_tone_mode(int max_wins) {
       return;
     }
     clear_screen();
-    if (response == word.tone[0]) {
+    if (response == word.tone) {
       wins += 1;
       printf("Correct!\n");
     } else {

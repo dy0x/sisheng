@@ -3,9 +3,8 @@
 
 #include <stddef.h>
 typedef struct {
-  const char *name;
-  int tone[2];
-  int num_tones;
+  char name[16];
+  int tone;
 } Pinyin;
 
 Pinyin random_syllable(void);
