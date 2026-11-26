@@ -36,9 +36,9 @@ static void run_single_tone_mode(int max_wins) {
     printf("\nListen to the audio and select the corresponding pinyin:\n");
     printf("Current Score: (%d/%d)\n", wins, max_wins);
     Pinyin word;
-    do{
+    do {
       word = random_syllable();
-    }while(!audio_file_exists(word));
+    } while (!audio_file_exists(word));
     show_tone_choices(word);
     while (play_syllable_audio(word) != 0) {
       printf("Unable to play audio.\nPress 1 to retry or Q to quit.\n");
@@ -58,7 +58,7 @@ static void run_single_tone_mode(int max_wins) {
     }
   }
 
-  if (wins == max_wins){
+  if (wins == max_wins) {
     clear_screen();
     printf("Congratulations! You win!!\n");
   }

@@ -1,8 +1,7 @@
+#include "audio.h"
 #include "pinyin.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "audio.h"
-
 
 int play_syllable_audio(Pinyin syllable) {
   const char *filename = syllable.name;

@@ -5,40 +5,42 @@
 #include <stdlib.h>
 #include <string.h>
 
-// todo: have the program scan and store /audio contents at startup to bypass hardcoding
-static const char *bases[]={"hao","niu","nong","ai","xiang","xiao","xie","zhang","ma","ne"};
+// todo: have the program scan and store /audio contents at startup to bypass
+// hardcoding
+static const char *bases[] = {"hao",  "niu", "nong",  "ai", "xiang",
+                              "xiao", "xie", "zhang", "ma", "ne"};
 
-static const char* vowel_a[] = {"ā", "á", "ǎ", "à", "a"};
-static const char* vowel_e[] = {"ē", "é", "ě", "è", "e"};
-static const char* vowel_i[] = {"ī", "í", "ǐ", "ì", "i"};
-static const char* vowel_o[] = {"ō", "ó", "ǒ", "ò", "o"};
-static const char* vowel_u[] = {"ū", "ú", "ǔ", "ù", "u"};
-static const char* vowel_v[] = {"ǖ", "ǘ", "ǚ", "ǜ", "ü"};
+static const char *vowel_a[] = {"ā", "á", "ǎ", "à", "a"};
+static const char *vowel_e[] = {"ē", "é", "ě", "è", "e"};
+static const char *vowel_i[] = {"ī", "í", "ǐ", "ì", "i"};
+static const char *vowel_o[] = {"ō", "ó", "ǒ", "ò", "o"};
+static const char *vowel_u[] = {"ū", "ú", "ǔ", "ù", "u"};
+static const char *vowel_v[] = {"ǖ", "ǘ", "ǚ", "ǜ", "ü"};
 
 Pinyin random_syllable(void) {
-    Pinyin p;
-    const char *base = bases[rand()%(int)(sizeof(bases)/sizeof(bases[0]))];
-    p.tone = rand() % 5 + 1;
-    snprintf(p.name,sizeof(p.name),"%s%d",base,p.tone);
-    return p;
+  Pinyin p;
+  const char *base = bases[rand() % (int)(sizeof(bases) / sizeof(bases[0]))];
+  p.tone = rand() % 5 + 1;
+  snprintf(p.name, sizeof(p.name), "%s%d", base, p.tone);
+  return p;
 }
 
-int audio_file_exists(Pinyin syllable){
-    char path[256];
-    snprintf(path, sizeof(path),"audio/%s.mp3",syllable.name);
+int audio_file_exists(Pinyin syllable) {
+  char path[256];
+  snprintf(path, sizeof(path), "audio/%s.mp3", syllable.name);
 
-    FILE *f = fopen(path,"r");
-    if (f == NULL){
-        return 0;
-    }
-    fclose(f);
-    return 1;
+  FILE *f = fopen(path, "r");
+  if (f == NULL) {
+    return 0;
+  }
+  fclose(f);
+  return 1;
 }
 
 static ptrdiff_t vowel_position(Pinyin word) {
-  const char* name = word.name;
+  const char *name = word.name;
   char target = 'a';
-  char* result = strchr(name, target);
+  char *result = strchr(name, target);
   if (result != NULL) {
     return result - name;
   }
@@ -49,8 +51,14 @@ static ptrdiff_t vowel_position(Pinyin word) {
     return result - name;
   }
 
-  const char* new_target = "ou";
+  const char *new_target = "ou";
   result = strstr(name, new_target);
+  if (result != NULL) {
+    return result - name;
+  }
+
+  target = 'v';
+  result = strchr(name, target);
   if (result != NULL) {
     return result - name;
   }
@@ -58,17 +66,17 @@ static ptrdiff_t vowel_position(Pinyin word) {
   ptrdiff_t index = -1;
   for (size_t i = 0; i < strlen(word.name); i++) {
     if (word.name[i] == 'a' || word.name[i] == 'e' || word.name[i] == 'i' ||
-        word.name[i] == 'o' || word.name[i] == 'u') {
+        word.name[i] == 'o' || word.name[i] == 'u' || word.name[i] == 'v') {
       index = (ptrdiff_t)i;
     }
   }
   return index;
 }
 
-int format_syllable(Pinyin word, int tone, char* output, size_t output_size) {
+int format_syllable(Pinyin word, int tone, char *output, size_t output_size) {
   ptrdiff_t position = vowel_position(word);
   size_t word_length = strlen(word.name) - 1;
-  const char* replacement;
+  const char *replacement;
 
   if (tone > 4 || tone < 0) {
     return 1;
@@ -79,25 +87,26 @@ int format_syllable(Pinyin word, int tone, char* output, size_t output_size) {
   }
 
   switch (word.name[position]) {
-    case 'a':
-      replacement = vowel_a[tone];
-      break;
-    case 'e':
-      replacement = vowel_e[tone];
-      break;
-    case 'i':
-      replacement = vowel_i[tone];
-      break;
-    case 'o':
-      replacement = vowel_o[tone];
-      break;
-    case 'u':
-      replacement = vowel_u[tone];
-      break;
-    case 'v':
-      replacement = vowel_v[tone];
-    default:
-      return 1;
+  case 'a':
+    replacement = vowel_a[tone];
+    break;
+  case 'e':
+    replacement = vowel_e[tone];
+    break;
+  case 'i':
+    replacement = vowel_i[tone];
+    break;
+  case 'o':
+    replacement = vowel_o[tone];
+    break;
+  case 'u':
+    replacement = vowel_u[tone];
+    break;
+  case 'v':
+    replacement = vowel_v[tone];
+    break;
+  default:
+    return 1;
   }
 
   size_t needed = word_length + strlen(replacement);

@@ -1,11 +1,11 @@
+#include "input.h"
+#include "pinyin.h"
 #include <errno.h>
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "pinyin.h"
-#include "input.h"
 
 static int read_line(char *buffer, size_t size) {
   for (;;) {
@@ -55,10 +55,10 @@ static int parse_int(const char *str, int *out) {
 enum menu_result read_menu_choice(int min, int max, int *choice) {
   char buffer[64];
   for (;;) {
-    if (min == max){
-        printf("Selection: ");
-    }else{
-        printf("Selection (%d-%d): ", min, max);
+    if (min == max) {
+      printf("Selection: ");
+    } else {
+      printf("Selection (%d-%d): ", min, max);
     }
 
     if (read_line(buffer, sizeof(buffer)) != 0) {
