@@ -9,7 +9,7 @@
 
 static int read_line(char *buffer, size_t size) {
   for (;;) {
-    if (fgets(buffer, size, stdin) == NULL) {
+    if (fgets(buffer, (int)size, stdin) == NULL) {
       fprintf(stderr, "Invalid input or EOF\n");
       return 1;
     }
@@ -55,7 +55,11 @@ static int parse_int(const char *str, int *out) {
 enum menu_result read_menu_choice(int min, int max, int *choice) {
   char buffer[64];
   for (;;) {
-    printf("Selection (%d-%d): ", min, max);
+    if (min == max){
+        printf("Selection: ");
+    }else{
+        printf("Selection (%d-%d): ", min, max);
+    }
 
     if (read_line(buffer, sizeof(buffer)) != 0) {
       return MENU_EOF;

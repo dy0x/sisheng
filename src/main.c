@@ -9,24 +9,23 @@
 #include <string.h>
 #include <time.h>
 
-#define MAX_WINS 5
+#define MAX_WINS 2
 
 static void clear_screen(void) { printf("\033[2J\033[H"); }
 
-
 static void show_tone_choices(Pinyin word) {
   char pinyin[64];
-  for (size_t i = 0; i < 4; i++) {
+  for (int i = 0; i < 5; i++) {
     if (format_syllable(word, i, pinyin, sizeof(pinyin)) != 0) {
       fprintf(stderr, "Could not format pinyin.\n");
       return;
     }
-    printf("  %zu - %s\n", i + 1, pinyin);
+    printf("  %d - %s\n", i + 1, pinyin);
   }
 }
 
 static void run_single_tone_mode(int max_wins) {
-  const int min = 1, max = 4;
+  const int min = 1, max = 5;
   int wins = 0;
   int response;
 
@@ -36,12 +35,18 @@ static void run_single_tone_mode(int max_wins) {
     printf("\nSingle Tone Mode\n");
     printf("\nListen to the audio and select the corresponding pinyin:\n");
     printf("Current Score: (%d/%d)\n", wins, max_wins);
-    Pinyin word = random_syllable();
+    Pinyin word;
+    do{
+      word = random_syllable();
+    }while(!audio_file_exists(word));
     show_tone_choices(word);
-    if (play_syllable_audio(word) == 1) {
-      exit(1);
-    };
-    if (read_menu_choice(min,max,&response)!=MENU_CHOICE){
+    while (play_syllable_audio(word) != 0) {
+      printf("Unable to play audio.\nPress 1 to retry or Q to quit.\n");
+      if (read_menu_choice(1, 1, &response) != MENU_CHOICE) {
+        return;
+      }
+    }
+    if (read_menu_choice(min, max, &response) != MENU_CHOICE) {
       return;
     }
     clear_screen();
@@ -51,6 +56,11 @@ static void run_single_tone_mode(int max_wins) {
     } else {
       printf("Incorrect! Try again...\n");
     }
+  }
+
+  if (wins == max_wins){
+    clear_screen();
+    printf("Congratulations! You win!!\n");
   }
 }
 
@@ -65,8 +75,8 @@ int main(void) {
   printf("  2 - Tone Pairs (Unavailable)\n");
   printf("  Q - Quit\n");
 
-  srand(time(NULL));
-  if (read_menu_choice(min,max,&game_mode)!=MENU_CHOICE){
+  srand((unsigned int)time(NULL));
+  if (read_menu_choice(min, max, &game_mode) != MENU_CHOICE) {
     printf("Goodbye!\n");
     return 0;
   }
