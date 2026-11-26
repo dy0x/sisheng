@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+// todo: have the program scan and store /audio contents at startup to bypass hardcoding
 static const char *bases[]={"hao","niu","nong","ai","xiang","xiao","xie","zhang","ma","ne"};
 
 static const char* vowel_a[] = {"ā", "á", "ǎ", "à", "a"};

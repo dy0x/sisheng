@@ -9,7 +9,7 @@
 #include <string.h>
 #include <time.h>
 
-#define MAX_WINS 2
+#define MAX_WINS 10
 
 static void clear_screen(void) { printf("\033[2J\033[H"); }
 
