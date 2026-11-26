@@ -8,7 +8,7 @@ typedef struct {
   int num_tones;
 } Pinyin;
 
-Pinyin get_word();
-int format_pinyin(Pinyin word, int tone, char *output, size_t output_size);
+Pinyin random_syllable(void);
+int format_syllable(Pinyin word, int tone, char *output, size_t output_size);
 
 #endif
